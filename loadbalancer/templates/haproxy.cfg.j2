@@ -1,0 +1,37 @@
+global
+  log 127.0.0.1 local2 notice warning
+  user haproxy
+  group haproxy
+  daemon
+  # ... other global settings
+
+defaults
+  mode http
+  log global
+  option dontlognull
+  # ... other default settings
+
+frontend public
+  bind *:80
+  option httplog
+  # ... other frontend settings
+  default_backend app
+
+frontend secure_api
+  bind *:443
+  mode https
+  # ... other HTTPS frontend settings
+  default_backend api_servers
+  
+backend app
+  balance roundrobin
+  # ... other backend settings
+  server webserver1 {{ webserver_ips[0] }}:80 check
+  server webserver2 {{ webserver_ips[1] }}:80 check
+  
+backend api_servers
+  balance roundrobin
+  # ... other backend settings
+  server api1 {{ api_servers[0] }}:443 check ssl verify none
+  server api2 {{ api_servers[1] }}:443 check ssl verify none
+  #

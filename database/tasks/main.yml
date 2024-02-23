@@ -1,0 +1,12 @@
+---
+# tasks file for database
+
+- name: Ensure MySQL is installed and running 
+  package:
+    name: mysql-server 
+    state: present
+
+      #- name: Create database 
+      #  mysql_db:
+      #    name: "{{ database_name }}"
+      #    state: present
